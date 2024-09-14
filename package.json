@@ -1,0 +1,38 @@
+{
+  "name": "use-selektor",
+  "version": "1.0.0",
+  "description": "Performantly extract specific data from complext react contexts",
+  "main": "dist/index.js",
+  "licenses": [
+    {
+      "type": "ISC"
+    }
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc --declaration"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/danbermantech/use-selektor"
+  },
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    }
+  },
+  "keywords": ["react", "useSelector", "useSelektor", "skeletor", "hooks", "optimization"],
+  "license": "ISC",
+  "devDependencies": {
+    "@types/react": "^18.3.5",
+    "react": "^18.3.1",
+    "typescript": "^5.6.2"
+  },
+  "peerDependencies": {
+    "react": "^18.3.1"
+  }
+}
