@@ -1,31 +1,31 @@
 import { useRef, useContext, Context } from 'react'
 
-// Define the type for the selector function
-export type SelectorFunction<State, Selected> = (state: State) => Selected
+// Define the type for the selektor function
+export type SelektorFunction<State, Selekted> = (state: State) => Selekted
 
 // Define a generic function to extract the State type from the context value
-function useSelectorHelper<State, Selected>(
-  selector: SelectorFunction<State, Selected>,
+function useSelektorHelper<State, Selekted>(
+  selektor: SelektorFunction<State, Selekted>,
   contextValue: State | undefined,
-): Selected {
-  const latestSelectedStateRef = useRef<Selected>()
-  const latestSelectedResultRef = useRef<Selected>()
+): Selekted {
+  const latestSelektedStateRef = useRef<Selekted>()
+  const latestSelektedResultRef = useRef<Selekted>()
 
-  const selectedState = selector(contextValue as State)
+  const selektedState = selektor(contextValue as State)
 
-  if (selectedState !== latestSelectedResultRef.current) {
-    latestSelectedResultRef.current = selectedState
-    latestSelectedStateRef.current = selectedState
+  if (selektedState !== latestSelektedResultRef.current) {
+    latestSelektedResultRef.current = selektedState
+    latestSelektedStateRef.current = selektedState
   }
 
-  return latestSelectedResultRef.current as Selected
+  return latestSelektedResultRef.current as Selekted
 }
 
-// Define the type for the useSelector hook
-export function useSelector<State, Selected>(
-  selector: SelectorFunction<State, Selected>,
+// Define the type for the useSelektor hook
+export function useSelektor<State, Selekted>(
+  selektor: SelektorFunction<State, Selekted>,
   context: Context<State>,
-): Selected {
+): Selekted {
   const contextValue = useContext(context)
-  return useSelectorHelper(selector, contextValue)
+  return useSelektorHelper(selektor, contextValue)
 }

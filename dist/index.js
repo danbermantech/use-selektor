@@ -1,17 +1,17 @@
 import { useRef, useContext } from 'react';
 // Define a generic function to extract the State type from the context value
-function useSelectorHelper(selector, contextValue) {
-    const latestSelectedStateRef = useRef();
-    const latestSelectedResultRef = useRef();
-    const selectedState = selector(contextValue);
-    if (selectedState !== latestSelectedResultRef.current) {
-        latestSelectedResultRef.current = selectedState;
-        latestSelectedStateRef.current = selectedState;
+function useSelektorHelper(selektor, contextValue) {
+    const latestSelektedStateRef = useRef();
+    const latestSelektedResultRef = useRef();
+    const selektedState = selektor(contextValue);
+    if (selektedState !== latestSelektedResultRef.current) {
+        latestSelektedResultRef.current = selektedState;
+        latestSelektedStateRef.current = selektedState;
     }
-    return latestSelectedResultRef.current;
+    return latestSelektedResultRef.current;
 }
-// Define the type for the useSelector hook
-export function useSelector(selector, context) {
+// Define the type for the useSelektor hook
+export function useSelektor(selektor, context) {
     const contextValue = useContext(context);
-    return useSelectorHelper(selector, contextValue);
+    return useSelektorHelper(selektor, contextValue);
 }
