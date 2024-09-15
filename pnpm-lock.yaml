@@ -11,6 +11,9 @@ importers:
       '@types/react':
         specifier: ^18.3.5
         version: 18.3.5
+      json:
+        specifier: ^11.0.0
+        version: 11.0.0
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -31,6 +34,11 @@ packages:
 
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
+
+  json@11.0.0:
+    resolution: {integrity: sha512-N/ITv3Yw9Za8cGxuQqSqrq6RHnlaHWZkAFavcfpH/R52522c26EbihMxnY7A1chxfXJ4d+cEFIsyTgfi9GihrA==}
+    engines: {node: '>=0.10.0'}
+    hasBin: true
 
   loose-envify@1.4.0:
     resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
@@ -57,6 +65,8 @@ snapshots:
   csstype@3.1.3: {}
 
   js-tokens@4.0.0: {}
+
+  json@11.0.0: {}
 
   loose-envify@1.4.0:
     dependencies:

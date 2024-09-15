@@ -1,6 +1,6 @@
 {
   "name": "use-selektor",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Performantly extract specific data from complext react contexts",
   "main": "dist/index.js",
   "licenses": [
@@ -9,8 +9,8 @@
     }
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc --declaration"
+    "build": "tsc --declaration",
+    "prepublishOnly": "npm run build && json -f package.json -I -e \"delete this.devDependencies; delete this.dependencies\""
   },
   "repository": {
     "type": "git",
@@ -25,10 +25,23 @@
       "require": "./dist/index.js"
     }
   },
-  "keywords": ["react", "useSelector", "useSelektor", "skeletor", "hooks", "optimization"],
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "react",
+    "useSelector",
+    "useSelektor",
+    "skeletor",
+    "hooks",
+    "optimization",
+    "redux",
+    "context"
+  ],
   "license": "ISC",
   "devDependencies": {
     "@types/react": "^18.3.5",
+    "json": "^11.0.0",
     "react": "^18.3.1",
     "typescript": "^5.6.2"
   },
