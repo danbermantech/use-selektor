@@ -1,6 +1,6 @@
 {
   "name": "use-selektor",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Performantly extract specific data from complext react contexts",
   "main": "dist/index.js",
   "licenses": [
