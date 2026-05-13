@@ -7,114 +7,110 @@
 ![NPM License](https://img.shields.io/npm/l/use-selektor)
 
 
-useSelektor is a powerful React hook designed to simplify data extraction from complex contexts. By leveraging this hook, you can selectively access specific data slices without causing unnecessary rerenders, ensuring optimized performance. With full type safety and zero dependencies, useSelektor enhances your React components by providing a streamlined and efficient way to manage and use context values.
+useSelektor is a React context-selector utility for reading only the slice of state a component needs. It uses a subscription model so consumer components update when their selected value changes, not when unrelated context keys change.
 
 ## Features
 
-- 🦺Fully typesafe
-- 🛑Stops unneccessary rerenders when context value changes
-- 🤏Zero dependencies
-- 🩻Named after He-Man's primary antagonist
+- Fully typesafe selector API
+- Prevents selector consumers from rerendering on unrelated state updates
+- Custom equality support for derived selector output
+- Named after He-Man's primary antagonist
 
 ## Usage
 
-1. **Create Contexts:** Define contexts with complex data structures.
-2. **Define a Selektor Function:** Implement a function to specify which part of the context you need.
-3. **Use `useSelektor` Hook:** Call `useSelektor` with your selektor function and the relevant context.
+1. Create a selector-aware context with `createSelektorContext`.
+2. Render its `Provider` with the current state value.
+3. Read slices with `YourContext.useSelektor(selector, isEqual?)`.
 
 ### Example
 
 ```tsx
-import { useSelektor } from 'use-selektor';
-import { createContext } from 'react';
+import { createSelektorContext } from 'use-selektor'
+import { useMemo, useState } from 'react'
 
-// Define your data types
-type ComplexType = {
-    id: string,
-    label:string,
-    value:number
-    attributes: {
-        width:number,
-        height:number
-    }
+type Item = {
+    id: string
+    label: string
+    value: number
 }
 
-type ComplexRecord = Record<string, ComplexType>
-
-
-// Create some example data
-const foo:ComplexType = {
-    id:'1', label:'foo', value:100,
-    attributes:{
-        width:10, height:10
-    }
+type AppState = {
+    items: Record<string, Item>
+    selectedId: string
+    theme: 'light' | 'dark'
 }
 
-const bar:ComplexType = {
-    id:'2', label:'bar', value:200,
-    attributes:{
-        width:50, height:50
-    }
+const AppContext = createSelektorContext<AppState>()
+
+function ItemTitle() {
+    const title = AppContext.useSelektor(state => state.items[state.selectedId].label)
+    return <h2>{title}</h2>
 }
 
-const itemRecord:ComplexRecord = {
-    foo,
-    bar,
-    //{...etc}
+function ThemeBadge() {
+    const theme = AppContext.useSelektor(state => state.theme)
+    return <span>{theme}</span>
 }
 
-// Create your contexts
-const MyContext = createContext<ComplexType>(foo)
+export function App() {
+    const [state, setState] = useState<AppState>({
+        items: {
+            a: { id: 'a', label: 'Alpha', value: 1 },
+            b: { id: 'b', label: 'Beta', value: 2 },
+        },
+        selectedId: 'a',
+        theme: 'light',
+    })
 
-const MyRecordContext = createContext<ComplexRecord>(itemRecord)
+    const value = useMemo(() => state, [state])
 
-
-// Create your custom hooks for easier reuse
-function useMyContext<T>(selektor: (args: ComplexType) => T) {
-    return useSelektor(selektor, MyContext)
-}
-
-function useMyRecordContext<T>(selektor: (args: ComplexRecord) => T) {
-    return useSelektor(selektor, MyContext)
-}
-
-
-// Example components using these hooks to consume the contexts
-const MyComponent = () =>{
-    const id = useMyContext(({id})=>id);
-    const label = useMyContext(context=>context.label);
-    const {width, height} = useMyContext(context=>(context.attributes));
-    
     return (
-        <div id={id} style={{width, height}}>
-            {label}
-        </div>
-    )
-}
-
-const MyRecordComponent = ({id}:{id:string}) =>{
-    const {label, attributes:{width, height}} = useMyRecordContext(context=>context[id])
-    return (
-        <div id={id} style={{width,height}}>
-            {label}
-        </div>
-    )
-}
-
-// Providing context and rendering components
-const App = ({data}:{data:ComplexType})=>{
-    return (
-        <MyContext.Provider value={data}>
-            <MyComponent/>
-            {
-                ['foo','bar'].map(k=>(
-                    <MyRecordComponent id={k}/>
-                ))
-            }
-        </MyContext.Provider>
+        <AppContext.Provider value={value}>
+            <ItemTitle />
+            <ThemeBadge />
+            <button
+                onClick={() => {
+                    setState(prev => ({ ...prev, theme: prev.theme === 'light' ? 'dark' : 'light' }))
+                }}
+            >
+                Toggle Theme
+            </button>
+        </AppContext.Provider>
     )
 }
 ```
+
+## Custom Equality
+
+Use `isEqual` when your selector returns derived objects:
+
+```tsx
+const userPreview = UserContext.useSelektor(
+    state => ({ id: state.user.id, name: state.user.name }),
+    (a, b) => a.id === b.id && a.name === b.name
+)
+```
+
+## Migration from v1
+
+`useSelektor(selector, reactContext)` has been removed in v2.
+
+Legacy:
+```tsx
+const result = useSelektor(selector, SomeReactContext)
+```
+
+V2:
+```tsx
+const SomeContext = createSelektorContext<State>()
+
+function Child() {
+    const result = SomeContext.useSelektor(selector)
+    return <>{result}</>
+}
+```
+
+Replace plain React context + standalone hook usage with the factory-generated provider and hook pair.
 
 
 ## License

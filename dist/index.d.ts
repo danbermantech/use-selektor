@@ -1,3 +1,11 @@
-import { Context } from 'react';
+import { ReactNode } from 'react';
 export type SelektorFunction<State, Selekted> = (state: State) => Selekted;
-export declare function useSelektor<State, Selekted>(selektor: SelektorFunction<State, Selekted>, context: Context<State>): Selekted;
+export type EqualityFunction<Selekted> = (a: Selekted, b: Selekted) => boolean;
+export type SelektorContext<State> = {
+    Provider: (props: {
+        value: State;
+        children?: ReactNode;
+    }) => ReactNode;
+    useSelektor: <Selekted>(selektor: SelektorFunction<State, Selekted>, isEqual?: EqualityFunction<Selekted>) => Selekted;
+};
+export declare function createSelektorContext<State>(): SelektorContext<State>;

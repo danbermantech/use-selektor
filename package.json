@@ -1,7 +1,7 @@
 {
   "name": "use-selektor",
-  "version": "1.0.2",
-  "description": "Performantly extract specific data from complext react contexts",
+  "version": "2.0.0",
+  "description": "Context selector utilities for React contexts",
   "main": "dist/index.js",
   "licenses": [
     {
@@ -10,7 +10,9 @@
   ],
   "scripts": {
     "build": "tsc --declaration",
-    "prepublishOnly": "npm run build && json -f package.json -I -e \"delete this.devDependencies; delete this.dependencies\""
+    "test": "vitest run --environment jsdom",
+    "test:watch": "vitest --environment jsdom",
+    "prepublishOnly": "npm run build && npm run test"
   },
   "repository": {
     "type": "git",
@@ -36,13 +38,19 @@
     "hooks",
     "optimization",
     "redux",
-    "context"
+    "context",
+    "context-selector",
+    "useSyncExternalStore"
   ],
   "license": "ISC",
   "devDependencies": {
     "@types/react": "^18.3.5",
-    "json": "^11.0.0",
+    "@types/react-dom": "^18.3.0",
+    "@testing-library/react": "^16.1.0",
+    "jsdom": "^25.0.1",
     "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "vitest": "^2.1.8",
     "typescript": "^5.6.2"
   },
   "peerDependencies": {
