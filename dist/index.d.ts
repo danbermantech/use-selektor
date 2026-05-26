@@ -8,4 +8,4 @@ export type SelektorContext<State> = {
     }) => ReactNode;
     useSelektor: <Selekted>(selektor: SelektorFunction<State, Selekted>, isEqual?: EqualityFunction<Selekted>) => Selekted;
 };
-export declare function createSelektorContext<State>(): SelektorContext<State>;
+export declare function createSelektorContext<State>(...args: [] | [defaultValue: State]): SelektorContext<State>;

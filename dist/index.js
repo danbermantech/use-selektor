@@ -19,8 +19,10 @@ function createStore(initialState) {
         },
     };
 }
-export function createSelektorContext() {
-    const StoreContext = createContext(null);
+export function createSelektorContext(...args) {
+    const hasDefaultValue = args.length === 1;
+    const defaultStore = hasDefaultValue ? createStore(args[0]) : null;
+    const StoreContext = createContext(defaultStore);
     const useIsomorphicLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
     function Provider(props) {
         const { value, children } = props;
@@ -35,7 +37,8 @@ export function createSelektorContext() {
         return createElement(StoreContext.Provider, { value: store }, children);
     }
     function useSelektor(selektor, isEqual) {
-        const store = useContext(StoreContext);
+        const storeFromContext = useContext(StoreContext);
+        const store = storeFromContext ?? defaultStore;
         if (!store) {
             throw new Error('useSelektor must be used within its matching Selektor Provider.');
         }

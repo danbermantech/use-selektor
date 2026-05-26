@@ -52,8 +52,10 @@ export type SelektorContext<State> = {
   ) => Selekted
 }
 
-export function createSelektorContext<State>(): SelektorContext<State> {
-  const StoreContext = createContext<Store<State> | null>(null)
+export function createSelektorContext<State>(...args: [] | [defaultValue: State]): SelektorContext<State> {
+  const hasDefaultValue = args.length === 1
+  const defaultStore = hasDefaultValue ? createStore(args[0]) : null
+  const StoreContext = createContext<Store<State> | null>(defaultStore)
   const useIsomorphicLayoutEffect =
     typeof window === 'undefined' ? useEffect : useLayoutEffect
 
@@ -78,7 +80,8 @@ export function createSelektorContext<State>(): SelektorContext<State> {
     selektor: SelektorFunction<State, Selekted>,
     isEqual?: EqualityFunction<Selekted>
   ): Selekted {
-    const store = useContext(StoreContext)
+    const storeFromContext = useContext(StoreContext)
+    const store = storeFromContext ?? defaultStore
 
     if (!store) {
       throw new Error('useSelektor must be used within its matching Selektor Provider.')

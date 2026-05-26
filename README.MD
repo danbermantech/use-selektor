@@ -14,6 +14,7 @@ useSelektor is a React context-selector utility for reading only the slice of st
 - Fully typesafe selector API
 - Prevents selector consumers from rerendering on unrelated state updates
 - Custom equality support for derived selector output
+- Optional default context value for safe reads without a matching provider
 - Named after He-Man's primary antagonist
 
 ## Usage
@@ -21,6 +22,16 @@ useSelektor is a React context-selector utility for reading only the slice of st
 1. Create a selector-aware context with `createSelektorContext`.
 2. Render its `Provider` with the current state value.
 3. Read slices with `YourContext.useSelektor(selector, isEqual?)`.
+
+### API
+
+```ts
+createSelektorContext<State>(): SelektorContext<State>
+createSelektorContext<State>(defaultValue: State): SelektorContext<State>
+```
+
+- Without `defaultValue`, calling `useSelektor` without a matching provider throws.
+- With `defaultValue`, calling `useSelektor` without a matching provider selects from the default state.
 
 ### Example
 
@@ -90,6 +101,29 @@ const userPreview = UserContext.useSelektor(
     (a, b) => a.id === b.id && a.name === b.name
 )
 ```
+
+## Default Value Fallback
+
+Pass an initial default state to avoid runtime errors in places where a provider may be missing:
+
+```tsx
+type SessionState = {
+    user: { id: string; name: string } | null
+    locale: string
+}
+
+const SessionContext = createSelektorContext<SessionState>({
+    user: null,
+    locale: 'en',
+})
+
+function Header() {
+    const locale = SessionContext.useSelektor(state => state.locale)
+    return <span>{locale}</span>
+}
+```
+
+In this setup, `Header` reads from the default value when rendered outside `SessionContext.Provider`.
 
 ## Migration from v1
 

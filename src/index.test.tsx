@@ -120,6 +120,19 @@ describe('createSelektorContext', () => {
     )
   })
 
+  it('uses default value when hook is used without matching provider', () => {
+    const CounterContext = createSelektorContext<{ count: number }>({ count: 10 })
+
+    function Consumer() {
+      const count = CounterContext.useSelektor(state => state.count)
+      return <div data-testid="count-with-default">{count}</div>
+    }
+
+    render(<Consumer />)
+
+    expect(screen.getByTestId('count-with-default').textContent).toBe('10')
+  })
+
   it('recomputes when selector function identity changes', () => {
     type State = { count: number; label: string }
     const CounterContext = createSelektorContext<State>()
